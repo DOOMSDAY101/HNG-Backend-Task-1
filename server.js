@@ -11,6 +11,9 @@ const getLoctionfn = (userIPAddr) => {
     console.log(userIPAddr)
 }
 
+app.get('/', (req, res) => {
+    res.send("hello")
+})
 app.get('/api/hello', async (req, res) => {
     let { visitor_name } = req.query;
     let ipAddr = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
