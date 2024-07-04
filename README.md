@@ -3,7 +3,7 @@
 ### Task Description
 
 Setup a basic web server in your preferred stack Deploy it to any free hosting platform and expose an API endpoint that conforms to the criteria below:<br>
-Endpoint: [GET] `<example.com>/api/hello?visitor_name="Mark"`
+Endpoint: [GET] `https://hng-backend-task-1-pi.vercel.app/api/hello?visitor_name=Mark`
 
 Response:<br>
 
