@@ -2,7 +2,7 @@
   "name": "hng-backend-task-1",
   "version": "1.0.0",
   "description": "Basic web server",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
     "start": "node index.js"
