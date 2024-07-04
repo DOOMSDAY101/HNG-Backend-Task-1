@@ -29,7 +29,7 @@ app.get('/api/hello', async (req, res) => {
         let weatherRes = await weatherReq.json();
 
         if (weatherRes && weatherRes.current) {
-            const { temp_c } = weatherRes.current
+            const { temp_c } = weatherRes.current;
             res.json({ "client_ip": userIPAddr, "location": userCity, "greeting": `Hello, ${visitor_name}!, the temperature is ${temp_c} degrees Celcius in ${userCity}` })
         } else {
             res.json({ 'error': weatherRes })
