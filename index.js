@@ -7,25 +7,38 @@ const TOKEN = process.env.TOKEN
 const API_KEY = process.env.API_KEY
 app.set("trust proxy", true);
 
-
 app.get('/', (req, res) => {
     res.send("visit /api/hello?visitor_name='Your Name' for the magic")
 })
 app.get('/api/hello', async (req, res) => {
     let { visitor_name } = req.query;
-
-    const request = await fetch(`https://ipinfo.io/json?token=${TOKEN}`);
+    let ipAddr = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+    if (ipAddr.includes('::ffff')) {
+        ipAddr = ipAddr.split('::ffff:')[1]
+    }
+    console.log(ipAddr)
+    const request = await fetch(`https://ipinfo.io/${ipAddr}/json?token=${TOKEN}`);
     const response = await request.json();
 
     const userIPAddr = response.ip;
     const userCity = response.city
 
     // get weather
-    let weatherReq = await fetch(`http://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${userCity}`)
-    let weatherRes = await weatherReq.json();
-    const { temp_c } = weatherRes.current
+    try {
+        let weatherReq = await fetch(`http://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${userCity}`)
+        let weatherRes = await weatherReq.json();
 
-    res.json({ "client_ip": userIPAddr, "location": userCity, "greeting": `Hello, ${visitor_name}!, the temperature is ${temp_c} degrees Celcius in ${userCity}` })
+        if (weatherRes && weatherRes.current) {
+            const { temp_c } = weatherRes.current
+        } else {
+            res.json({ 'error': weatherRes })
+            console.error('Unexpected response structure:', weatherRes)
+        }
+        res.json({ "client_ip": userIPAddr, "location": userCity, "greeting": `Hello, ${visitor_name}!, the temperature is ${temp_c} degrees Celcius in ${userCity}` })
+    } catch (error) {
+        console.error('Error fetching weather data:', error)
+    }
+
 })
 
 app.listen(PORT, () => {
