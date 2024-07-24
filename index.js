@@ -1,6 +1,7 @@
 let express = require('express')
 // remove
 let bodyParser = require('body-parser');
+let crypto = require("crypto");
 
 require('dotenv').config()
 let app = express();
@@ -45,8 +46,29 @@ app.get('/api/hello', async (req, res) => {
 });
 //remove
 app.post('/webhook', bodyParser.text({type: "*/*"}),(req,res)=>{
-    const signature = req.get("X-Signature")
+    try {
+    const secret = "task_5_signing_secret_2024";
+   
     const rawBody = req.body;
+        if (!rawBody) {
+      throw new Error("No body");
+    }
+
+    const signature = req.get("X-Signature")
+    const hmac = crypto.createHmac("sha256", secret);
+    hmac.update(rawBody);
+    const digest = hmac.digest("hex");
+
+    if (
+      !signature ||
+      !crypto.timingSafeEqual(
+        Buffer.from(digest, "hex"),
+        Buffer.from(signature, "hex")
+      )
+    ) {
+      throw new Error("Invalid signature.");
+    }
+        
     const data = JSON.parse(rawBody)
     const {
         currency,
@@ -55,6 +77,9 @@ app.post('/webhook', bodyParser.text({type: "*/*"}),(req,res)=>{
     } = data.data.attributes;
     console.log(`${signature}, ${currency}, ${status}, ${created_at}`);  
     res.sendStatus(200); 
+    } catch(error){
+        
+    }
 })
 
 app.listen(PORT, () => {
