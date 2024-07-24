@@ -1,4 +1,7 @@
 let express = require('express')
+// remove
+let bodyParser = require('body-parser');
+
 require('dotenv').config()
 let app = express();
 
@@ -39,6 +42,18 @@ app.get('/api/hello', async (req, res) => {
         console.error('Error fetching weather data:', error)
     }
 
+});
+//remove
+app.post('/webhook', bodyParser.text({type: "*/*}),(req,res)=>{
+    const signature = req.get("X-Signature)
+    const rawBody = req.body;
+    const data = JSON.parse(rawBody)
+    const {
+        currency,
+        status,
+        created_at   
+    } = data.data.attribute;
+    console.log(`${signature}, ${currency}, ${status}`, ${created_at});                                  
 })
 
 app.listen(PORT, () => {
