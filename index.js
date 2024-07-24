@@ -45,7 +45,7 @@ app.get('/api/hello', async (req, res) => {
 });
 //remove
 app.post('/webhook', bodyParser.text({type: "*/*"}),(req,res)=>{
-    const signature = req.get("X-Signature)
+    const signature = req.get("X-Signature")
     const rawBody = req.body;
     const data = JSON.parse(rawBody)
     const {
