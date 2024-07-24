@@ -47,7 +47,7 @@ app.get('/api/hello', async (req, res) => {
 //remove
 app.post('/webhook', bodyParser.text({type: "*/*"}),(req,res)=>{
     try {
-    const secret = "task_5_signing_secret_2024";
+    const secret = process.env.LEMONSQUEEZY_SIGNING_KEY";
    
     const rawBody = req.body;
         if (!rawBody) {
