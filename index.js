@@ -44,7 +44,7 @@ app.get('/api/hello', async (req, res) => {
 
 });
 //remove
-app.post('/webhook', bodyParser.text({type: "*/*}),(req,res)=>{
+app.post('/webhook', bodyParser.text({type: "*/*"}),(req,res)=>{
     const signature = req.get("X-Signature)
     const rawBody = req.body;
     const data = JSON.parse(rawBody)
@@ -52,8 +52,9 @@ app.post('/webhook', bodyParser.text({type: "*/*}),(req,res)=>{
         currency,
         status,
         created_at   
-    } = data.data.attribute;
-    console.log(`${signature}, ${currency}, ${status}`, ${created_at});                                  
+    } = data.data.attributes;
+    console.log(`${signature}, ${currency}, ${status}, ${created_at}`);  
+    res.sendStatus(200); 
 })
 
 app.listen(PORT, () => {
